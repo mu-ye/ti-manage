@@ -20,6 +20,14 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
+ * <p>
+ *     @EnableGlobalMethodSecurity(prePostEnabled = true) :  开启 SpEL（Spring Expression Language）表达式
+ *     1. 权限表达式可以在 SpringSecurityConfig 中统一配置
+ *     2. 可以使用注解在方法上使用
+ * </p>
+ *
+ *
+ *
  * @author 牟欢
  * @Classname SpringSecurityConfig
  * @Description TODO
@@ -56,6 +64,16 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
+     * <p>
+     *     常用 SpEL 表达式
+     *     hasRole([role])                       拥有指定角色时返回 true
+     *     hasAnyRole([role1],[role2])           拥有任意一个角色时返回 true
+     *     hasAuthority([authority])             拥有某资源的访问权限时返回 true
+     *     hasAnyAuthority([auth1],[auth2])      拥有部分资源的访问权限时返回 true
+     *     permitAll                             永远返回 true
+     *     denyAll                               永远返回 false
+     * </p>
+     *
      * 配置 Spring Security 过滤规则
      * @param http
      * @throws Exception
@@ -63,16 +81,18 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
+                // 添加自定义 JWT 过滤器
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                // 配置全局过滤规则
                 .authorizeRequests()
-                //.antMatchers(HttpMethod.DELETE, "/tasks/**").hasRole("ADMIN")
-                // 测试用资源，需要验证了的用户才能访问   `
 
-                //.antMatchers("/role/**").authenticated()
+                // antMatchers后面添加路径  .access后面添加路径的过滤规则
+                .antMatchers("/tasks/**").access("hasRole('ADMIN')")
+                // 自定义认证逻辑和参数
+
                 // 其他都放行了
                 .anyRequest().permitAll()
                 .and()
-
                 // 不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
