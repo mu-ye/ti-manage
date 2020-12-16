@@ -9,7 +9,7 @@ spring:
   resources:
     add-mappings: false
 server:
-  port: 8080
+  port: 1111
 logging:
   file:
     path: C:/log/study
