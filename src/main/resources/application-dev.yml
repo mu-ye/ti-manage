@@ -16,3 +16,12 @@ logging:
   level:
     root: info
     com.njmetro.evaluation.mapper: info
+
+log4j:
+  appender:
+    customerLogger:
+      File: C:/log/second.log
+      DatePattern: .'yyyy-MM-dd
+      layout: org.apache.log4j.PatternLayout
+  logger:
+    customerLogger: INFO,customerLogger

@@ -29,14 +29,14 @@ public class JwtTokenUtil {
      */
     private static final String USER_INFO_KEY = "user_info";
     /**
-     * token 的超时时间（单位为秒）2分钟
+     * token 的超时时间（单位为秒）1分钟
      */
-    private static final long TOKEN_EXPIRED_SECOND = 120;
+    private static final long TOKEN_EXPIRED_SECOND = 1*24*60*60;
 
     /**
-     *  点击记住我的后的 token超时时间为 1天
+     *  点击记住我的后的 token超时时间为 2天
      */
-    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 1*24*60*60;
+    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 2*24*60*60;
 
     /**
      * header中存放 token的字段名称

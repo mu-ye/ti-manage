@@ -41,7 +41,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             jwtToken = jwtToken.replace(JwtTokenUtil.TOKEN_PREFIX, "").trim();
             // 从 jwtToken中 获取用户名
             String username = JwtTokenUtil.getUsernameFromToken(jwtToken);
-            log.info(" username{}",username);
             //如果可以正确的从JWT中提取用户信息，并且该用户未被授权
             if(username != null &&
                     SecurityContextHolder.getContext().getAuthentication() == null){

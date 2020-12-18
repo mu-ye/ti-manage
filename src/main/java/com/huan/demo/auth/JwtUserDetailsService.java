@@ -51,7 +51,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         for(Role role :roleList){
             authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         }
-        log.info("用户角色信息已添加到SpringSecurity 中");
         return new JwtUserDetails(loginUser.getUsername(), loginUser.getPassword(), authorities);
     }
 }
