@@ -29,14 +29,14 @@ public class JwtTokenUtil {
      */
     private static final String USER_INFO_KEY = "user_info";
     /**
-     * token 的超时时间（单位为秒）1分钟
+     * token 的超时时间（单位为秒）1天
      */
-    private static final long TOKEN_EXPIRED_SECOND = 1*24*60*60;
+    private static final long TOKEN_EXPIRED_SECOND = 30;
 
     /**
-     *  点击记住我的后的 token超时时间为 2天
+     * 点击记住我的后的 token超时时间为 2天
      */
-    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 2*24*60*60;
+    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 2 * 24 * 60 * 60;
 
     /**
      * header中存放 token的字段名称
@@ -72,7 +72,7 @@ public class JwtTokenUtil {
     /**
      * 创建Token
      *
-     * @param userName 用户名
+     * @param userName     用户名
      * @param isRememberMe 是否有记住我 true: token过期时间设为  TOKEN_EXPIRED_SECOND_REMEMBER_ME ，false oken过期时间设为  TOKEN_EXPIRED_SECOND
      * @return
      */
@@ -126,9 +126,19 @@ public class JwtTokenUtil {
     }
 
     /**
+     * 刷新token
+     * @param token
+     */
+    public static void refreshToken(String token) {
+        Claims claims = getClaimsFromToken(token);
+        claims.setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRED_SECOND * 1000));
+    }
+
+
+    /**
      * 验证令牌
      *
-     * @param token 令牌
+     * @param token    令牌
      * @param userName 用户名
      * @return
      */
@@ -151,7 +161,7 @@ public class JwtTokenUtil {
                     .setAllowedClockSkewSeconds(180L)
                     .setSigningKey(getSecretKey())
                     .build().parseClaimsJws(token);
-          claims = jws.getBody();
+            claims = jws.getBody();
         } catch (Exception e) {
             claims = null;
         }
@@ -160,12 +170,12 @@ public class JwtTokenUtil {
 
     public static void main(String[] args) {
 
-        String token = generateToken("117042",true);
-        log.info("--token:{}",token);
+        String token = generateToken("117042", true);
+        log.info("--token:{}", token);
         String userName = getUsernameFromToken(token);
-        log.info("--userName:{}",userName);
-        log.info("--isLive:{}",isTokenExpired(token).toString());
-        log.info("--yanzhenglingpai:{}",validateToken(token,"117042").toString());
+        log.info("--userName:{}", userName);
+        log.info("--isLive:{}", isTokenExpired(token).toString());
+        log.info("--yanzhenglingpai:{}", validateToken(token, "117042").toString());
 
         String token1 = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlbnRyYW5jZSIsInN1YiI6ImFkbWluIiwiaWF0IjoxNTk5ODA5OTMwLCJleHAiOjE1OTk4MTM1MzB9.LTMxjfAEiuX0zaPqmSHjVC1gnsyyzN4IXf34tYMhGnU";
         System.out.println(getUsernameFromToken(token1));

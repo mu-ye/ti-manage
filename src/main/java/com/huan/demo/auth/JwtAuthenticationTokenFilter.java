@@ -39,18 +39,26 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if(!StringUtils.isEmpty(jwtToken)){
             // 截取掉其中的前缀  "Bearer " , .trim
             jwtToken = jwtToken.replace(JwtTokenUtil.TOKEN_PREFIX, "").trim();
-            // 从 jwtToken中 获取用户名
-            String username = JwtTokenUtil.getUsernameFromToken(jwtToken);
-            //如果可以正确的从JWT中提取用户信息，并且该用户未被授权
-            if(username != null &&
-                    SecurityContextHolder.getContext().getAuthentication() == null){
-                UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
-                if(JwtTokenUtil.validateToken(jwtToken,userDetails.getUsername())){
-                    //给使用该JWT令牌的用户进行授权
-                    UsernamePasswordAuthenticationToken authenticationToken
-                            = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-                    //交给spring security管理,在之后的过滤器中不会再被拦截进行二次授权了
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            // 判断用户 token 是否过期，未过期继续鉴权；
+            if(JwtTokenUtil.isTokenExpired(jwtToken)){
+                log.info("用户 token 已过期");
+                // 刷新 token
+                JwtTokenUtil.refreshToken(jwtToken);
+            }else {
+                // 从 jwtToken中 获取用户名
+                String username = JwtTokenUtil.getUsernameFromToken(jwtToken);
+                log.info("过期后时间{}",username);
+                //如果可以正确的从JWT中提取用户信息，并且该用户未被授权
+                if(username != null &&
+                        SecurityContextHolder.getContext().getAuthentication() == null){
+                    UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
+                    if(JwtTokenUtil.validateToken(jwtToken,userDetails.getUsername())){
+                        //给使用该JWT令牌的用户进行授权
+                        UsernamePasswordAuthenticationToken authenticationToken
+                                = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                        //交给spring security管理,在之后的过滤器中不会再被拦截进行二次授权了
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    }
                 }
             }
         }

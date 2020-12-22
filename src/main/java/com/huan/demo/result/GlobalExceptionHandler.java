@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
     @ExceptionHandler(NoHandlerFoundException.class)
     public Result<String> handleNoHandlerFoundException(NoHandlerFoundException e) {
         return Result.error("1001", "API 不存在：" + e.getRequestURL());

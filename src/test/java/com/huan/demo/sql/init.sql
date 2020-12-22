@@ -47,13 +47,25 @@ CREATE TABLE IF NOT EXISTS menu
 ) ENGINE = InnoDB
   DEFAULT CHARSET = UTF8MB4;
 
-# 创建 tree 表( 前端动态加载数据 )
+# 4. 创建 tree 表( 前端动态加载数据 )
 CREATE TABLE IF NOT EXISTS tree
 (
     id          INT UNSIGNED AUTO_INCREMENT COMMENT '自增ID',
     parent_id   INT UNSIGNED NOT NULL COMMENT '父ID',
     title       VARCHAR(100) NOT NULL COMMENT '节点名称',
     is_leaf     INT UNSIGNED NOT NULL COMMENT '是否为叶子节点 1： true  0: false',
+    alive       INT UNSIGNED NOT NULL COMMENT '是否生效 0： false  1: true',
+    creat_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    PRIMARY KEY (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = UTF8MB4;
+
+# 5. 创建 定时任务表
+CREATE TABLE IF NOT EXISTS cron
+(
+    id          INT UNSIGNED AUTO_INCREMENT COMMENT '自增ID',
+    cron        VARCHAR(20)  NOT NULL COMMENT '定时任务',
     alive       INT UNSIGNED NOT NULL COMMENT '是否生效 0： false  1: true',
     creat_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -117,10 +129,15 @@ VALUES (1, 0, 'index', '/', '/home', 'BasicLayout', ' ', '首页'),
 
 # 4. 插入树形文件目录
 INSERT INTO tree(parent_id, title, is_leaf, alive)
-VALUES (0,"0-1",0,1),
-       (0,"0-2",0,1),
-       (1,"1-1-1",0,1),
-       (1,"1-1-2",1,1),
-       (3,"1-1-1-1",0,1),
-       (3,"1-1-1-2",1,1);
+VALUES (0, '0-1', 0, 1),
+       (0, '0-2', 0, 1),
+       (1, '1-1-1', 0, 1),
+       (1, '1-1-2', 1, 1),
+       (3, '1-1-1-1', 0, 1),
+       (3, '1-1-1-2', 1, 1);
+
+
+# 5. 插入定时任务
+INSERT INTO cron(cron,alive) VALUES
+    ('0/5 * * * * ?',1);
 
