@@ -73,6 +73,21 @@ CREATE TABLE IF NOT EXISTS cron
 ) ENGINE = InnoDB
   DEFAULT CHARSET = UTF8MB4;
 
+# 6 excel  excelDemo 包括 int string dataTime
+
+CREATE TABLE IF NOT EXISTS excel
+(
+    id          INT UNSIGNED AUTO_INCREMENT COMMENT '自增ID',
+    age         INT UNSIGNED NOT NULL COMMENT '年龄',
+    job_number  VARCHAR(10)  NOT NULL COMMENT '工号',
+    birthday    DATETIME     NOT NULL COMMENT '生日',
+    alive       INT UNSIGNED NOT NULL COMMENT '是否生效 0： false  1: true',
+    creat_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    PRIMARY KEY (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = UTF8MB4;
+
 
 
 ### 插入数据
@@ -138,6 +153,6 @@ VALUES (0, '0-1', 0, 1),
 
 
 # 5. 插入定时任务
-INSERT INTO cron(cron,alive) VALUES
-    ('0/5 * * * * ?',1);
+INSERT INTO cron(cron, alive)
+VALUES ('0/5 * * * * ?', 1);
 

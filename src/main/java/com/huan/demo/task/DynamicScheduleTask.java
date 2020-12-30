@@ -24,7 +24,9 @@ public class DynamicScheduleTask implements SchedulingConfigurer {
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.addTriggerTask(
-                () -> System.out.println("执行定时任务"),
+                () -> {
+                    System.out.println("执行定时任务");
+                },
                 triggerContext -> {
                     //2.1 从数据库获取执行周期
                     String cron = cronService.getById(1).getCron();
