@@ -33,7 +33,7 @@ public class JwtAuthController {
     public String login(@RequestBody LoginParam loginParam) {
         // 用户名密码不能为空
         if (StringUtils.isEmpty(loginParam.getUsername()) || StringUtils.isEmpty(loginParam.getPassword())) {
-            throw new RuntimeException("用户名或密码为空");
+            throw new RuntimeException("用户名或密码不能为空");
         }
         // 如果 rememberMe 为空，rememberMe = false
         if(loginParam.getRememberMe() == null){

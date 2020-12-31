@@ -31,12 +31,12 @@ public class JwtTokenUtil {
     /**
      * token 的超时时间（单位为秒）1天
      */
-    private static final long TOKEN_EXPIRED_SECOND = 30;
+    private static final long TOKEN_EXPIRED_SECOND = 10;
 
     /**
-     * 点击记住我的后的 token超时时间为 2天
+     * 点击记住我的后的 token超时时间为 2天 (2 * 24 * 60 * 60)
      */
-    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 2 * 24 * 60 * 60;
+    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 30;
 
     /**
      * header中存放 token的字段名称
@@ -99,12 +99,11 @@ public class JwtTokenUtil {
      * @return
      */
     public static String getUsernameFromToken(String token) {
-        String username;
+        String username = null;
         try {
             Claims claims = getClaimsFromToken(token);
             username = claims.getSubject();
         } catch (Exception e) {
-            username = null;
         }
         return username;
     }
@@ -168,16 +167,21 @@ public class JwtTokenUtil {
         return claims;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
+       String token = generateToken("117042", true);
+        System.out.println(token);
 
-        String token = generateToken("117042", true);
-        log.info("--token:{}", token);
-        String userName = getUsernameFromToken(token);
+        String testToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTcwNDIiLCJjcmVhdGVkIjoxNjA5MzgwODcyMDk5LCJleHAiOjE2MDkzODA5OTJ9.BogJSW5GFUxgDOTcjrAiPZFZCg2Du_sdYhBauHReH98";
+        log.info("--token:{}", testToken);
+        String userName = getUsernameFromToken(testToken);
         log.info("--userName:{}", userName);
-        log.info("--isLive:{}", isTokenExpired(token).toString());
-        log.info("--yanzhenglingpai:{}", validateToken(token, "117042").toString());
-
-        String token1 = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJlbnRyYW5jZSIsInN1YiI6ImFkbWluIiwiaWF0IjoxNTk5ODA5OTMwLCJleHAiOjE1OTk4MTM1MzB9.LTMxjfAEiuX0zaPqmSHjVC1gnsyyzN4IXf34tYMhGnU";
-        System.out.println(getUsernameFromToken(token1));
+        log.info("--isLive:{}", isTokenExpired(testToken).toString());
+        log.info("--yanzhenglingpai:{}", validateToken(testToken, "117042").toString());
+    }*/
+    public static void main(String[] args) {
+        String token = generateToken("117042", true);
+        System.out.println(token);
+        String stringToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTcwNDIiLCJjcmVhdGVkIjoxNjA5MzgzMjQ4Mzg0LCJleHAiOjE2MDkzODMzNjh9.XHm09K6qCGtAm-VGPGr1edwqVzaBF0aOKIEWJMTy4k0";
+        System.out.println(JwtTokenUtil.validateToken(token,"117042").toString());
     }
 }

@@ -36,6 +36,7 @@ public class TreeController {
      * @return
      */
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("/getFirstLevelTreeVO")
     public List<TreeVO> getFirstLevelTreeVO(Integer level){
          return treeService.selectFirstLevelTreeVO(level);

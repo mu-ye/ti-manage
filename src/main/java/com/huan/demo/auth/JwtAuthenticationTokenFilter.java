@@ -42,12 +42,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             // 判断用户 token 是否过期，未过期继续鉴权；
             if(JwtTokenUtil.isTokenExpired(jwtToken)){
                 log.info("用户 token 已过期");
+                return;
                 // 刷新 token
-                JwtTokenUtil.refreshToken(jwtToken);
+                //JwtTokenUtil.refreshToken(jwtToken);
             }else {
                 // 从 jwtToken中 获取用户名
                 String username = JwtTokenUtil.getUsernameFromToken(jwtToken);
-                log.info("过期后时间{}",username);
+                log.info("token 未过期");
                 //如果可以正确的从JWT中提取用户信息，并且该用户未被授权
                 if(username != null &&
                         SecurityContextHolder.getContext().getAuthentication() == null){
@@ -59,6 +60,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                         //交给spring security管理,在之后的过滤器中不会再被拦截进行二次授权了
                         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     }
+
                 }
             }
         }

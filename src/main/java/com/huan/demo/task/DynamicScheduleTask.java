@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
-import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.util.StringUtils;
 
 /**
  * @author 牟欢
@@ -23,7 +21,7 @@ public class DynamicScheduleTask implements SchedulingConfigurer {
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        taskRegistrar.addTriggerTask(
+        /*taskRegistrar.addTriggerTask(
                 () -> {
                     System.out.println("执行定时任务");
                 },
@@ -37,6 +35,6 @@ public class DynamicScheduleTask implements SchedulingConfigurer {
                     //2.3 返回执行周期(Date)
                     return new CronTrigger(cron).nextExecutionTime(triggerContext);
                 }
-        );
+        );*/
     }
 }

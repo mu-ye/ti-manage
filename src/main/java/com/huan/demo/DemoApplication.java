@@ -20,7 +20,6 @@ import org.springframework.context.ConfigurableApplicationContext;
  *
  *
  *
- *
  * @author mubaisama
  */
 @SpringBootApplication(scanBasePackages = "com.huan")
