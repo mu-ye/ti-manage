@@ -17,6 +17,8 @@ import java.util.Base64;
  */
 @Slf4j
 public class AesUtil {
+    public static final String AES_KEY = "c6c179101e5d3065";
+
     private static final String AES = "AES";
     private static final String UTF_8 = "UTF-8";
     private static final String AES_CBC_CIPHER = "AES/CBC/PKCS5Padding";
@@ -111,12 +113,13 @@ public class AesUtil {
     public static void main(String[] args) {
         // 生成key 加密 解密
         String key = generateRandomKey();
-        String jobNumber = "117043";
+        log.info("key",key);
+        String jobNumber = "123";
         String jobNumberEn = encrypt(jobNumber, key);
         String jobNumberDe = decrypt(jobNumberEn, key);
         log.info("key {}", key);
-        log.info("加密后工号 {}", jobNumberEn);
-        log.info("解密后工号 {}", jobNumberDe);
+        log.info("encrypt {}", jobNumberEn);
+        log.info("decrypt {}", jobNumberDe);
 
         // 系统中是否需要集成单点登录  card 中 sign
         Boolean sign = true;

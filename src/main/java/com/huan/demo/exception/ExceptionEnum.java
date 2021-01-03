@@ -7,7 +7,10 @@ package com.huan.demo.exception;
  * @Date 2020-09-21 15:22
  */
 public enum ExceptionEnum {
-
+    /**
+     * 请求方法不受支持
+     */
+    UserException("401", "登录失败"),
 
     /**
      * 请求方法不受支持
@@ -18,6 +21,10 @@ public enum ExceptionEnum {
      * 请求方法参数类型错误
      */
     MethodArgumentTypeMismatchException("A0102", "请求方法参数类型错误");
+
+
+
+
 
 
 

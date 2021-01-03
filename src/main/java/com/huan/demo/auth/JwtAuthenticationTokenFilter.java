@@ -1,3 +1,4 @@
+/*
 package com.huan.demo.auth;
 
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+*/
 /**
  * @author 牟欢
  * @Classname JwtAuthenticationTokenFilter
  * @Description TODO
  * @Date 2020-09-17 13:48
- */
+ *//*
+
 @Slf4j
 @Service
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -67,3 +70,4 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
 }
+*/

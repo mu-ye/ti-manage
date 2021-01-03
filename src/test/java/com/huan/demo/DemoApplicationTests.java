@@ -1,6 +1,8 @@
 package com.huan.demo;
 
 import com.huan.demo.manager.user.UserInfoManager;
+import com.huan.demo.mapper.RoleMapper;
+import com.huan.demo.service.RoleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,9 +15,21 @@ class DemoApplicationTests {
     @Autowired
     UserInfoManager userInfoManager;
 
+    @Autowired
+    RoleMapper roleMapper;
+
+    @Autowired
+    RoleService roleService;
+
     @Test
     void getCount1(){
         System.out.println(userInfoManager.getUserInfoByJobNumber("117042"));
+    }
+
+    @Test
+    void getCount2(){
+        //System.out.println(roleMapper.selectRolesByJobNumber("117042"));
+        System.out.println(roleService.selectRolesByJobNumber("117042"));
     }
 
 }

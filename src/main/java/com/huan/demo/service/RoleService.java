@@ -22,4 +22,13 @@ public interface RoleService extends IService<Role> {
      * @return
      */
     List<Role> selectPageRole(Page<Role> page);
+
+
+    /**
+     *  获取用户拥有的所有权限
+     *
+     * @param jobNumber 用户工号
+     * @return
+     */
+    List<String> selectRolesByJobNumber(String jobNumber);
 }

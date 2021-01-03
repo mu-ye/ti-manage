@@ -1,3 +1,4 @@
+/*
 package com.huan.demo.controller;
 
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * <p>
  *  前端控制器
@@ -25,7 +27,8 @@ import java.util.List;
  *
  * @author MuBaiSama
  * @since 2020-12-08
- */
+ *//*
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +36,8 @@ import java.util.List;
 public class RoleController {
 
 
-    /**
+    */
+/**
      * <P>
      *     SpEL 表达式详解
      *     SpEL 添加到方法上有四种注解，内部搭配全局变量中的方法，如 hasRole  hasAnyRole 等
@@ -43,14 +47,17 @@ public class RoleController {
      *     3. @PreFilter(filterTarget = "ids",value = "filterObject != 1") filterTarget 和参数保持一致， value 里面是判断条件，将满足条件的值传进去，不满足条件的值过滤掉
      *     4. @PostFilter("filterObject != authentication.name")  函数执行后进行过滤操作，满足过滤规则的可以正常返回
      * </P>
-     */
+     *//*
+
 
     private final RoleService roleService;
 
-    /**
+    */
+/**
      * 只有拥有 ROLE_ADMIN 权限的用户才可以执行该方法
      * @return
-     */
+     *//*
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/getList")
     List<Role> getList(){
@@ -59,10 +66,12 @@ public class RoleController {
         return roleService.list();
     }
 
-    /**
+    */
+/**
      * 方法执行后进行判断， 如果返回值（或者返回值中的name属性 )和权限中的 authentication.name 相等，可以返回;  如果不相等，会报 AccessDeniedException 异常
      * @return
-     */
+     *//*
+
     @PostAuthorize("returnObject == authentication.name")
     @GetMapping("/getUserName")
     public String getOne(){
@@ -71,13 +80,15 @@ public class RoleController {
         return "2";
     }
 
-    /**
+    */
+/**
      * @PreFilter(filterTarget = "ids",value = "filterObject != 1") filterTarget 和参数保持一致， value 里面是判断条件，将满足条件的值传进去，不满足条件的值过滤掉
      * 比如 id = 1 的值 不允许被删除
      *
      * @param ids
      * @return
-     */
+     *//*
+
     @PreFilter(filterTarget = "ids",value = "filterObject != 1")
     @GetMapping("/delete")
     public List<Integer> delete (@RequestParam("ids") List<Integer> ids){
@@ -85,11 +96,13 @@ public class RoleController {
         return ids;
     }
 
-    /**
+    */
+/**
      *
      * @PostFilter("filterObject != authentication.name")  函数执行后进行过滤操作，满足过滤规则的可以正常返回
      * @return
-     */
+     *//*
+
     @PostFilter("filterObject != authentication.name")
     @GetMapping("/getRoleExceptAdmin")
     List<String> getRoleExceptAdmin(){
@@ -102,3 +115,4 @@ public class RoleController {
 
 }
 
+*/

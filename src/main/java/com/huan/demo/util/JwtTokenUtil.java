@@ -1,4 +1,4 @@
-package com.huan.demo.auth;
+package com.huan.demo.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -8,9 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * @author 牟欢
@@ -31,12 +30,12 @@ public class JwtTokenUtil {
     /**
      * token 的超时时间（单位为秒）1天
      */
-    private static final long TOKEN_EXPIRED_SECOND = 10;
+    private static final long TOKEN_EXPIRED_SECOND = 20;
 
     /**
      * 点击记住我的后的 token超时时间为 2天 (2 * 24 * 60 * 60)
      */
-    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 30;
+    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 20;
 
     /**
      * header中存放 token的字段名称
@@ -46,6 +45,8 @@ public class JwtTokenUtil {
      * token 前缀
      */
     public static final String TOKEN_PREFIX = "Bearer ";
+
+    public static final String CLAIM_ROLES = "roles";
 
 
     /**
@@ -70,17 +71,44 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 创建Token
+     * 创建 accessToken
      *
+     * @param roles        用户拥有的权限
      * @param userName     用户名
      * @param isRememberMe 是否有记住我 true: token过期时间设为  TOKEN_EXPIRED_SECOND_REMEMBER_ME ，false oken过期时间设为  TOKEN_EXPIRED_SECOND
      * @return
      */
-    public static String generateToken(String userName, Boolean isRememberMe) {
-        Map<String, Object> claims = new HashMap<>(2);
+    public static String generateAccessToken(String userName, Boolean isRememberMe, List<String> roles) {
+        Map<String, Object> claims = new HashMap<>(3);
         claims.put("sub", userName);
         claims.put("created", new Date());
+        // 自定义负载
+        claims.put(CLAIM_ROLES, roles);
         long expiration = isRememberMe ? TOKEN_EXPIRED_SECOND_REMEMBER_ME : TOKEN_EXPIRED_SECOND;
+        // 添加自定义参数
+        JwtBuilder jwtBuilder = Jwts.builder()
+                // 添加负载
+                .setClaims(claims)
+                // 设置过期时间
+                .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
+                // 设置 SECRET
+                .signWith(getSecretKey());
+        return jwtBuilder.compact();
+    }
+
+    /**
+     * 创建 refreshToken
+     *
+     * @param userName     用户名
+     * @param isRememberMe 是否记住我
+     * @return
+     */
+    public static String generateReFreshToken(String userName, Boolean isRememberMe) {
+        Map<String, Object> claims = new HashMap<>(3);
+        claims.put("sub", userName);
+        claims.put("created", new Date());
+        // refreshToken 的有效时间是 accessToken 时间的两倍
+        long expiration = (isRememberMe ? TOKEN_EXPIRED_SECOND_REMEMBER_ME : TOKEN_EXPIRED_SECOND) * 2;
         // 添加自定义参数
         JwtBuilder jwtBuilder = Jwts.builder()
                 // 添加负载
@@ -109,6 +137,22 @@ public class JwtTokenUtil {
     }
 
     /**
+     * 从token中读取负载
+     *
+     * @param token
+     * @return
+     */
+    public static  List<String> getRolesFromToken(String token) {
+        List<String> roles = null;
+        try {
+            Claims claims = getClaimsFromToken(token);
+            roles = (List<String>) claims.get(CLAIM_ROLES);
+        } catch (Exception e) {
+        }
+        return roles;
+    }
+
+    /**
      * 判断令牌是否过期
      *
      * @param token 令牌
@@ -118,19 +162,21 @@ public class JwtTokenUtil {
         try {
             Claims claims = getClaimsFromToken(token);
             Date expiration = claims.getExpiration();
+            log.info("过期时间 expiration{}",expiration);
+            log.info("当前时间 expiration{}", LocalDateTime.now());
             return expiration.before(new Date());
         } catch (Exception e) {
             return false;
         }
     }
 
-    /**
+/*    *//**
      * 刷新token
+     *
      * @param token
      */
-    public static void refreshToken(String token) {
-        Claims claims = getClaimsFromToken(token);
-        claims.setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRED_SECOND * 1000));
+    public static String refreshAccessToken(String token) {
+        return generateAccessToken(getUsernameFromToken(token),true,getRolesFromToken(token));
     }
 
 
@@ -167,21 +213,22 @@ public class JwtTokenUtil {
         return claims;
     }
 
-    /*public static void main(String[] args) {
-       String token = generateToken("117042", true);
-        System.out.println(token);
-
-        String testToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTcwNDIiLCJjcmVhdGVkIjoxNjA5MzgwODcyMDk5LCJleHAiOjE2MDkzODA5OTJ9.BogJSW5GFUxgDOTcjrAiPZFZCg2Du_sdYhBauHReH98";
-        log.info("--token:{}", testToken);
-        String userName = getUsernameFromToken(testToken);
-        log.info("--userName:{}", userName);
-        log.info("--isLive:{}", isTokenExpired(testToken).toString());
-        log.info("--yanzhenglingpai:{}", validateToken(testToken, "117042").toString());
-    }*/
     public static void main(String[] args) {
-        String token = generateToken("117042", true);
-        System.out.println(token);
-        String stringToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTcwNDIiLCJjcmVhdGVkIjoxNjA5MzgzMjQ4Mzg0LCJleHAiOjE2MDkzODMzNjh9.XHm09K6qCGtAm-VGPGr1edwqVzaBF0aOKIEWJMTy4k0";
-        System.out.println(JwtTokenUtil.validateToken(token,"117042").toString());
+        List<String> roles = new ArrayList<>();
+        roles.add("ROLE_ADMIN");
+        roles.add("ROLE_USER");
+
+        String accessToken = generateAccessToken("117042", false, roles);
+        System.out.println(accessToken);
+
+
+        String refreshToken = generateReFreshToken("117042", false);
+        System.out.println("refreshToken:"+refreshToken);
+
+        System.out.println("getUsernameFromToken(accessToken):"+getUsernameFromToken(accessToken));
+        System.out.println("getUsernameFromToken(refreshToken):"+getUsernameFromToken(refreshToken));
+
+        System.out.println("getRolesFromToken(accessToken):"+getRolesFromToken(accessToken));
+        System.out.println("getRolesFromToken(refreshToken):"+getRolesFromToken(refreshToken));
     }
 }

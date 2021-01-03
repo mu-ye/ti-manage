@@ -24,4 +24,15 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     @Select("SELECT * FROM role")
     List<Role> selectPageRoleVo(Page<Role> page);
+
+    /**
+     * 根据用户工号查询用户角色
+     *
+     * @param jobNumber 用户工号
+     * @return
+     */
+    @Select("SELECT role_name\n" +
+            "FROM user_role,role\n" +
+            "WHERE user_role.job_number = #{jobNumber} and user_role.role_id = role.id;")
+    List<String>  selectRolesByJobNumber(String jobNumber);
 }

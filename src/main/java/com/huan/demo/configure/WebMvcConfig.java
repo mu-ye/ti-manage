@@ -1,9 +1,13 @@
 package com.huan.demo.configure;
 
+import com.huan.demo.interceptor.TokenInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.MultipartConfigElement;
@@ -14,8 +18,14 @@ import javax.servlet.MultipartConfigElement;
  * 3. 配置拦截器
  * @author mubaisama
  */
+@Configuration
+@RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    /**
+     *  从IOC容器中获取拦截器
+     */
+    private final TokenInterceptor tokenInterceptor;
 
     /**
      * 解决跨域问题
@@ -41,4 +51,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
         factory.setMaxRequestSize(DataSize.parse("1024MB"));
         return factory.createMultipartConfig();
     }
+
+    /**
+     * 自定义拦截器
+     * @param registry
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(tokenInterceptor).addPathPatterns("/**").excludePathPatterns("/login");
+    }
+
 }

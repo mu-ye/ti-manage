@@ -89,6 +89,18 @@ CREATE TABLE IF NOT EXISTS excel
   DEFAULT CHARSET = UTF8MB4;
 
 
+# 7 创建用户角色表 user_role  (用户的唯一值暂不用id来表示， 使用 username)
+CREATE TABLE IF NOT EXISTS user_role
+(
+    id          INT UNSIGNED AUTO_INCREMENT COMMENT '自增ID',
+    job_number  VARCHAR(10)  NOT NULL COMMENT '用户工号（唯一标识）',
+    role_id     INT UNSIGNED NOT NULL COMMENT '角色ID',
+    alive       INT UNSIGNED NOT NULL COMMENT '是否生效 0： false  1: true',
+    creat_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    PRIMARY KEY (id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = UTF8MB4;
 
 ### 插入数据
 # 1. 插入角色信息
@@ -99,7 +111,7 @@ VALUES ('ROLE_ADMIN', 1),
 
 # 2. 插入角色信息
 INSERT INTO user(username, password, alive)
-VALUES ('117042', '$2a$10$BQWN5NyogF/f944bfwevNO4kP5b8yR9haP3UoNZfrsWXT1syAEa8O', 1);
+VALUES ('117042', '2mQXBkbopVcbL+x7pJpyAw==', 1);
 
 
 # 3. 插入目录结构
@@ -155,4 +167,16 @@ VALUES (0, '0-1', 0, 1),
 # 5. 插入定时任务
 INSERT INTO cron(cron, alive)
 VALUES ('0/5 * * * * ?', 1);
+
+
+# 6. 插入用户角色表
+INSERT INTO user_role(job_number, role_id, alive)
+VALUES ('117042', 1, 1),
+       ('117042', 2, 1);
+
+
+SELECT role_name
+FROM user_role,role
+WHERE user_role.job_number = '117042' and user_role.role_id = role.id;
+
 

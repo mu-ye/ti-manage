@@ -1,7 +1,11 @@
 package com.huan.demo.result;
 
 import com.huan.demo.exception.ExceptionEnum;
+import com.huan.demo.exception.ReFreshTokenException;
+import com.huan.demo.exception.TokenExpiredException;
+import com.huan.demo.exception.UserNameNotMatchPasswordException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -9,6 +13,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -64,6 +69,39 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 用户登录失败异常捕获，返回 http状态码 401
+     * @param e
+     * @return
+     */
+    @ResponseStatus(code = HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UserNameNotMatchPasswordException.class)
+    public Result<String> handleUserNameNotMatchPasswordException(UserNameNotMatchPasswordException e) {
+        return Result.error("401", "用户未认证 --" + e.getMessage());
+    }
+
+    /**
+     * token 异常捕获，返回 http状态码 402
+     * @param e
+     * @return
+     */
+    @ResponseStatus( code = HttpStatus.PAYMENT_REQUIRED)
+    @ExceptionHandler(TokenExpiredException.class)
+    public Result<String> handleTokenExpiredException(TokenExpiredException e){
+        return Result.error("402",e.getMessage());
+    }
+
+    /**
+     * token 异常捕获，返回 http状态码 400
+     * @param e
+     * @return
+     */
+    @ResponseStatus( code = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ReFreshTokenException.class)
+    public Result<String> ReFreshToke(ReFreshTokenException e){
+        return Result.error("400",e.getMessage());
+    }
+
+    /**
      * 异常处理
      *
      * @param e Exception
@@ -75,7 +113,8 @@ public class GlobalExceptionHandler {
             return Result.error(ExceptionEnum.HttpRequestMethodNotSupportedException);
         } else if (e instanceof MethodArgumentTypeMismatchException) {
             return Result.error(ExceptionEnum.MethodArgumentTypeMismatchException);
-        } else {
+        }
+        else {
             return Result.error("1001", e.getMessage());
         }
     }

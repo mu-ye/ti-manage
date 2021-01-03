@@ -1,12 +1,11 @@
 package com.huan.demo.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huan.demo.domain.Role;
 import com.huan.demo.mapper.RoleMapper;
 import com.huan.demo.service.RoleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,5 +28,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public List<Role> selectPageRole(Page<Role> page) {
         return roleMapper.selectPageRoleVo(page);
+    }
+
+    @Override
+    public List<String> selectRolesByJobNumber(String jobNumber) {
+        return roleMapper.selectRolesByJobNumber(jobNumber);
     }
 }

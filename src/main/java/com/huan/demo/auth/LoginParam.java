@@ -2,6 +2,8 @@ package com.huan.demo.auth;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @author 牟欢
  * @Classname LoginParam
@@ -13,10 +15,12 @@ public class LoginParam {
     /**
      *  用户名
      */
+    @NotBlank(message = "用户名不能为空")
     public String username;
     /**
      * 密码
      */
+    @NotBlank(message = "密码不能为空")
     public String password;
     /**
      * 记住我
