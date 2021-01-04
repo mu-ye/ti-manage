@@ -7,6 +7,4 @@ import lombok.NoArgsConstructor;
  * @author mubaisama
  */
 @NoArgsConstructor
-public class UserNameNotMatchPasswordException extends BaseException {
-
-}
+public class UserNameNotMatchPasswordException extends BaseException {}

@@ -8,9 +8,19 @@ package com.huan.demo.exception;
  */
 public enum ExceptionEnum {
     /**
-     * 请求方法不受支持
+     *  用户名密码登录失败
      */
-    UserException("401", "登录失败"),
+    UserNameNotMatchPasswordException("4010","用户名或密码错误，请重新登录"),
+
+    /**
+     * accessToken 过期， refreshToken 未过期
+     */
+    AccessTokenExpiredException("4011","accessToken已过期，请获取新 accessToken 和 refreshToken"),
+
+    /**
+     * refreshToken 过期
+     */
+    RefreshTokenExpiredException("4012","用户账号已过期，请重新登录"),
 
     /**
      * 请求方法不受支持

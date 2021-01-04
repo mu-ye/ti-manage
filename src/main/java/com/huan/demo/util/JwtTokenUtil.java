@@ -1,5 +1,6 @@
 package com.huan.demo.util;
 
+import com.huan.demo.exception.AccessTokenExpiredException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
@@ -30,12 +31,12 @@ public class JwtTokenUtil {
     /**
      * token 的超时时间（单位为秒）1天
      */
-    private static final long TOKEN_EXPIRED_SECOND = 20;
+    private static final long TOKEN_EXPIRED_SECOND = 10;
 
     /**
      * 点击记住我的后的 token超时时间为 2天 (2 * 24 * 60 * 60)
      */
-    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 20;
+    private static final long TOKEN_EXPIRED_SECOND_REMEMBER_ME = 10;
 
     /**
      * header中存放 token的字段名称
@@ -166,7 +167,7 @@ public class JwtTokenUtil {
             log.info("当前时间 expiration{}", LocalDateTime.now());
             return expiration.before(new Date());
         } catch (Exception e) {
-            return false;
+            return true;
         }
     }
 
@@ -175,8 +176,11 @@ public class JwtTokenUtil {
      *
      * @param token
      */
-    public static String refreshAccessToken(String token) {
-        return generateAccessToken(getUsernameFromToken(token),true,getRolesFromToken(token));
+    public static List<String> refreshAccessToken(String token) {
+        List<String> tokenList = new ArrayList<>();
+        tokenList.add(generateAccessToken(getUsernameFromToken(token),false,getRolesFromToken(token)));
+        tokenList.add(generateReFreshToken(getUsernameFromToken(token),false));
+        return tokenList;
     }
 
 
@@ -208,7 +212,8 @@ public class JwtTokenUtil {
                     .build().parseClaimsJws(token);
             claims = jws.getBody();
         } catch (Exception e) {
-            claims = null;
+            log.info("token 已过期，抛出异常");
+            throw new AccessTokenExpiredException();
         }
         return claims;
     }

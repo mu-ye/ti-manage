@@ -1,12 +1,10 @@
 package com.huan.demo.interceptor;
 
+import com.huan.demo.exception.AccessTokenExpiredException;
 import com.huan.demo.util.JwtTokenUtil;
-import com.huan.demo.exception.ReFreshTokenException;
-import com.huan.demo.exception.TokenExpiredException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -41,25 +39,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             String accessToken = token.replace(JwtTokenUtil.TOKEN_PREFIX,"").trim();
             if(JwtTokenUtil.isTokenExpired(accessToken)){
                 log.info("accessToken 已过期");
-                // 根据 accessToken 中的 jobNumber 在redis 中获取 refreshToken
-                String jobNumber =  JwtTokenUtil.getUsernameFromToken(accessToken);
-                // 在redis 中查看 refreshToken 是否过期：未过期，刷新 accessToken 和 refreshToken； 已过期，用户重新登录
-
-                ValueOperations<String,String> operations = stringRedisTemplate.opsForValue();
-                if(stringRedisTemplate.hasKey(jobNumber)){
-                    String refreshToken = operations.get(jobNumber);
-                    if(JwtTokenUtil.isTokenExpired(refreshToken)){
-                        log.info("refreshToken 过期");
-                        throw new ReFreshTokenException();
-                    }else {
-                        log.info("refreshToken 未过期");
-                        String newAccessToken = JwtTokenUtil.refreshAccessToken(accessToken);
-                        throw new TokenExpiredException(newAccessToken);
-                    }
-                }else {
-                    log.info("refreshToken 在Redis中过期或不存在");
-                }
-                throw new TokenExpiredException("accessToken 已过期");
+                throw new AccessTokenExpiredException();
             }else {
                 log.info("accessToken 未过期");
                 String jobNumber = JwtTokenUtil.getUsernameFromToken(accessToken);

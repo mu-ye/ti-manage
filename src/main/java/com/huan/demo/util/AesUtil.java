@@ -111,8 +111,10 @@ public class AesUtil {
     }
 
     public static void main(String[] args) {
+        System.out.println(encrypt("117042",AES_KEY));
+
         // 生成key 加密 解密
-        String key = generateRandomKey();
+/*        String key = generateRandomKey();
         log.info("key",key);
         String jobNumber = "123";
         String jobNumberEn = encrypt(jobNumber, key);
@@ -133,6 +135,6 @@ public class AesUtil {
         // 根据用户注册生成的key，来解析获取用户工号
         String token = url.split("entranceAuthenticationToken=")[1];
         String getJobNumber = decrypt(token, key);
-        log.info("通过URL获取到的用户工号为 {}", getJobNumber);
+        log.info("通过URL获取到的用户工号为 {}", getJobNumber);*/
     }
 }
