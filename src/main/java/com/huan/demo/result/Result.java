@@ -1,7 +1,9 @@
 package com.huan.demo.result;
 
 import com.huan.demo.exception.ExceptionEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Result
@@ -10,6 +12,8 @@ import lombok.Data;
  * @date 2020/6/22 9:02
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Result<T> {
 
     /**
@@ -32,8 +36,6 @@ public class Result<T> {
      */
     private String errorMessage;
 
-    private Result() {
-    }
 
     public Result(Boolean success) {
         this.success = success;
@@ -44,12 +46,6 @@ public class Result<T> {
         this.data = data;
     }
 
-    public Result(Boolean success, T data, String errorCode, String errorMessage) {
-        this.success = success;
-        this.data = data;
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
-    }
 
     public static <T> Result<T> bool(Boolean success) {
         return new Result<>(success);

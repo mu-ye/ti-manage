@@ -3,7 +3,7 @@ package com.huan.demo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.huan.demo.util.JwtTokenUtil;
-import com.huan.demo.auth.LoginParam;
+import com.huan.demo.param.LoginParam;
 import com.huan.demo.domain.User;
 import com.huan.demo.exception.UserNameNotMatchPasswordException;
 import com.huan.demo.mapper.RoleMapper;

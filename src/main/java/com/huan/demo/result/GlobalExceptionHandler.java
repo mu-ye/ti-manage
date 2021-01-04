@@ -15,12 +15,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+/**
+ * <p> 常用注解学习</p>
+ *
+ * <p>
+ *     1. @RestControllerAdvice("com.huan.demo")
+ *          1.1  统一拦截  @RequestMapping 作用的方法
+ *          1.2  ("com.huan.demo") 参数中可以指定扫描的包
+ *     2.  @ExceptionHandler(NoHandlerFoundException.class)
+ *          2.1  异常捕获器，参数为指定异常；处理指定异常
+ * </p>
+ */
 
 /**
  * 异常处理
@@ -28,9 +38,14 @@ import java.util.stream.Collectors;
  * @author RCNJTECH
  * @date 2020/6/22 16:30
  */
-@RestControllerAdvice
+@RestControllerAdvice("com.huan.demo")
 public class GlobalExceptionHandler {
 
+    /**
+     * <p>
+     *     常用异常捕获
+     * </p>
+     */
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public Result<String> handleNoHandlerFoundException(NoHandlerFoundException e) {
@@ -64,6 +79,26 @@ public class GlobalExceptionHandler {
     public Result<String> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         return Result.error("1004", "缺少请求参数 " + e.getParameterName());
 
+    }
+
+    /**
+     * 请求方法不受支持
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public Result<String> handleHttpRequestMethodNotSupportedException(UserNameNotMatchPasswordException e){
+        return Result.error(ExceptionEnum.HttpRequestMethodNotSupportedException);
+    }
+
+    /**
+     * 请求方法参数错误
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public Result<String> handleMethodArgumentTypeMismatchException(UserNameNotMatchPasswordException e){
+        return Result.error(ExceptionEnum.MethodArgumentTypeMismatchException);
     }
 
     /**
@@ -104,14 +139,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public Result<String> handle(Exception e) {
-        if (e instanceof HttpRequestMethodNotSupportedException) {
-            return Result.error(ExceptionEnum.HttpRequestMethodNotSupportedException);
-        } else if (e instanceof MethodArgumentTypeMismatchException) {
-            return Result.error(ExceptionEnum.MethodArgumentTypeMismatchException);
-        }
-        else {
+
+
             return Result.error("1001", e.getMessage());
-        }
+
     }
 
 }
