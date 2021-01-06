@@ -1,4 +1,4 @@
-package com.huan.demo.auth;
+package com.huan.demo.param;
 
 import lombok.Data;
 

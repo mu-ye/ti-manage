@@ -1,7 +1,7 @@
 package com.huan.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.huan.demo.auth.LoginParam;
+import com.huan.demo.param.LoginParam;
 import com.huan.demo.domain.User;
 
 import java.util.List;

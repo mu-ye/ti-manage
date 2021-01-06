@@ -1,6 +1,6 @@
 package com.huan.demo.controller;
 
-import com.huan.demo.auth.LoginParam;
+import com.huan.demo.param.LoginParam;
 import com.huan.demo.exception.RefreshTokenExpiredException;
 import com.huan.demo.service.UserService;
 import com.huan.demo.util.JwtTokenUtil;
@@ -42,8 +42,10 @@ public class AuthController {
      */
     @GetMapping("/refreshToken")
     List<String> refreshToken(HttpServletRequest request) {
-        String refreshToken = request.getHeader(JwtTokenUtil.TOKEN_HEADER);
+        String refreshToken = request.getHeader(JwtTokenUtil.TOKEN_HEADER).replace(JwtTokenUtil.TOKEN_PREFIX,"").trim();
         if (!StringUtils.isEmpty(refreshToken)) {
+            // 去掉 token前缀 和 空格
+            refreshToken = refreshToken.replace(JwtTokenUtil.TOKEN_PREFIX,"").trim();
             if(JwtTokenUtil.isTokenExpired(refreshToken)){
                 // 判断 refreshToken 已过期，抛出异常
                 log.info("refreshToken 已过期，请重新登录");
