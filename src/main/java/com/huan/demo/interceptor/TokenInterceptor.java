@@ -1,6 +1,7 @@
 package com.huan.demo.interceptor;
 
 import com.huan.demo.exception.AccessTokenExpiredException;
+import com.huan.demo.exception.ReFreshTokenException;
 import com.huan.demo.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -33,7 +33,6 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         // 在请求头中获取token
         String token = request.getHeader(JwtTokenUtil.TOKEN_HEADER);
-        log.info("token:{}",token);
         if(!StringUtils.isEmpty(token)){
             // 从请求头中截取有效的 accessToken
             String accessToken = token.replace(JwtTokenUtil.TOKEN_PREFIX,"").trim();
@@ -44,12 +43,14 @@ public class TokenInterceptor implements HandlerInterceptor {
                 log.info("accessToken 未过期");
                 String jobNumber = JwtTokenUtil.getUsernameFromToken(accessToken);
                 List<String> role = JwtTokenUtil.getRolesFromToken(accessToken);
-                log.info("jobNumber:{}",jobNumber);
-                log.info("role:{}",role);
+                /**
+                 * todo: 登录成功后的操作
+                 */
             }
         }else {
             // 请求中没有token, 前台登录
             log.info("请求中不含token,登录后再此访问");
+            throw new ReFreshTokenException();
         }
         return true;
     }

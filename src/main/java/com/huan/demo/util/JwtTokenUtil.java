@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -98,7 +97,7 @@ public class JwtTokenUtil {
     }
 
     /**
-     * 创建 refreshToken
+     * 创建 refreshToken(和 accessToken相比，refreshToken没有用户权限信息，过期时间是accessToken两倍)
      *
      * @param userName     用户名
      * @param isRememberMe 是否记住我
@@ -143,7 +142,7 @@ public class JwtTokenUtil {
      * @param token
      * @return
      */
-    public static  List<String> getRolesFromToken(String token) {
+    public static List<String> getRolesFromToken(String token) {
         List<String> roles = null;
         try {
             Claims claims = getClaimsFromToken(token);
@@ -163,23 +162,23 @@ public class JwtTokenUtil {
         try {
             Claims claims = getClaimsFromToken(token);
             Date expiration = claims.getExpiration();
-            log.info("过期时间 expiration{}",expiration);
-            log.info("当前时间 expiration{}", LocalDateTime.now());
             return expiration.before(new Date());
         } catch (Exception e) {
             return true;
         }
     }
 
-/*    *//**
+    /*    */
+
+    /**
      * 刷新token
      *
      * @param token
      */
     public static List<String> refreshAccessToken(String token) {
         List<String> tokenList = new ArrayList<>();
-        tokenList.add(generateAccessToken(getUsernameFromToken(token),false,getRolesFromToken(token)));
-        tokenList.add(generateReFreshToken(getUsernameFromToken(token),false));
+        tokenList.add(generateAccessToken(getUsernameFromToken(token), false, getRolesFromToken(token)));
+        tokenList.add(generateReFreshToken(getUsernameFromToken(token), false));
         return tokenList;
     }
 
@@ -228,12 +227,12 @@ public class JwtTokenUtil {
 
 
         String refreshToken = generateReFreshToken("117042", false);
-        System.out.println("refreshToken:"+refreshToken);
+        System.out.println("refreshToken:" + refreshToken);
 
-        System.out.println("getUsernameFromToken(accessToken):"+getUsernameFromToken(accessToken));
-        System.out.println("getUsernameFromToken(refreshToken):"+getUsernameFromToken(refreshToken));
+        System.out.println("getUsernameFromToken(accessToken):" + getUsernameFromToken(accessToken));
+        System.out.println("getUsernameFromToken(refreshToken):" + getUsernameFromToken(refreshToken));
 
-        System.out.println("getRolesFromToken(accessToken):"+getRolesFromToken(accessToken));
-        System.out.println("getRolesFromToken(refreshToken):"+getRolesFromToken(refreshToken));
+        System.out.println("getRolesFromToken(accessToken):" + getRolesFromToken(accessToken));
+        System.out.println("getRolesFromToken(refreshToken):" + getRolesFromToken(refreshToken));
     }
 }

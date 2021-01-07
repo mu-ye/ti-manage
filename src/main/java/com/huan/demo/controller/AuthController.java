@@ -37,6 +37,7 @@ public class AuthController {
 
     /**
      * 刷新 token
+     *
      * @param request
      * @return
      */
@@ -50,10 +51,10 @@ public class AuthController {
                 // 判断 refreshToken 已过期，抛出异常
                 log.info("refreshToken 已过期，请重新登录");
                 throw new RefreshTokenExpiredException();
-            }else {
+            } else {
                 log.info("refreshToken 未过期，正在刷新token");
                 // 根据前端传入 refreshToken 刷新 accessToken和refreshToken
-                String accessToken = refreshToken.replace(JwtTokenUtil.TOKEN_PREFIX,"").trim();
+                String accessToken = refreshToken.replace(JwtTokenUtil.TOKEN_PREFIX, "").trim();
                 return JwtTokenUtil.refreshAccessToken(accessToken);
             }
         } else {
