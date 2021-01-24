@@ -18,7 +18,6 @@ public class FormParam {
     public String username;
     @NotBlank(message = "密码不能为空")
     public String sex;
-    /*@JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")*/
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public LocalDateTime date;
 }

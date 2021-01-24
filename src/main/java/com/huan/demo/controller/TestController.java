@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 
 /**
  * @author 牟欢
@@ -21,11 +20,8 @@ public class TestController {
 
     @GetMapping("/form")
     FormParam postForm(@Valid  FormParam formParam){
-        log.info("formParam{}",formParam.getDate());
+        log.info("formParam{}",formParam);
         return formParam;
     }
 
-    public static void main(String[] args) {
-        System.out.println(LocalDate.now().toString());
-    }
 }

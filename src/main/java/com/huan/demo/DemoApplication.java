@@ -25,14 +25,6 @@ public class DemoApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
-      /*  //  1. 返回 IOC容器
-       ConfigurableApplicationContext run = SpringApplication.run(DemoApplication.class, args);
-       // 2. 获取 ioc 容器中 bean 名字
-       String[] names = run.getBeanDefinitionNames();
-       System.out.println("ICO中注入组件");
-       for(String name : names){
-           System.out.println(name);
-       }*/
     }
 
 }

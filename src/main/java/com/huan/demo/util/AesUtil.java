@@ -111,7 +111,7 @@ public class AesUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(encrypt("117042",AES_KEY));
+        System.out.println(encrypt("123",AES_KEY));
 
         // 生成key 加密 解密
 /*        String key = generateRandomKey();
